@@ -1,6 +1,5 @@
 package com.andrea.gestorgastos.ui.gastos
 
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
@@ -17,25 +16,18 @@ import kotlinx.coroutines.launch
 class ResumenActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityResumenBinding
-    private lateinit var prefs: SharedPreferences
     private lateinit var adapter: ResumenAdapter
-    private var token = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityResumenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        prefs = getSharedPreferences("gestor_prefs", MODE_PRIVATE)
-        token = prefs.getString("token", "") ?: ""
-
         adapter = ResumenAdapter()
         binding.recyclerResumen.layoutManager = LinearLayoutManager(this)
         binding.recyclerResumen.adapter = adapter
 
-        binding.btnVolver.setOnClickListener {
-            finish()
-        }
+        binding.btnVolver.setOnClickListener { finish() }
 
         cargarResumen()
     }
@@ -43,18 +35,12 @@ class ResumenActivity : AppCompatActivity() {
     private fun cargarResumen() {
         lifecycleScope.launch {
             try {
-                val response = RetrofitClient.api.getResumen(token)
+                val response = RetrofitClient.api.getResumen()
                 if (response.isSuccessful) {
                     val datos = response.body() ?: emptyList()
-
-                    // Calcular total
                     val total = datos.sumOf { it["total"] as? Double ?: 0.0 }
                     binding.tvTotalMes.text = "%.2f €".format(total)
-
-                    // Actualizar lista
                     adapter.actualizarItems(datos)
-
-                    // Configurar gráfica
                     configurarGrafica(datos)
                 } else {
                     Toast.makeText(this@ResumenActivity, "Error al cargar resumen", Toast.LENGTH_SHORT).show()

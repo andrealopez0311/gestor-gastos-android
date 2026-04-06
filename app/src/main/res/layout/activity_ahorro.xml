@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- BARRA SUPERIOR -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#43A047"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/btnVolverAhorro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="← Volver"
+            android:backgroundTint="#2E7D32"
+            android:textColor="@android:color/white"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="🐷 Fondos de Ahorro"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <!-- BOTÓN CREAR FONDO -->
+    <Button
+        android:id="@+id/btnCrearFondo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="+ Crear Fondo de Ahorro"
+        android:backgroundTint="#43A047"
+        android:textColor="@android:color/white"
+        android:padding="16dp"
+        android:layout_margin="16dp"/>
+
+    <!-- LISTA -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerAhorros"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"/>
+
+</LinearLayout>

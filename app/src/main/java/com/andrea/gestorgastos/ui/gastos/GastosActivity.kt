@@ -1,6 +1,5 @@
 package com.andrea.gestorgastos.ui.gastos
 
-import com.andrea.gestorgastos.ui.gastos.ResumenActivity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -12,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrea.gestorgastos.databinding.ActivityGastosBinding
 import com.andrea.gestorgastos.model.GastoRequest
 import com.andrea.gestorgastos.network.RetrofitClient
+import com.andrea.gestorgastos.ui.hogar.CrearHogarActivity
+import com.andrea.gestorgastos.ui.hogar.HogarActivity
 import com.andrea.gestorgastos.ui.login.LoginActivity
 import kotlinx.coroutines.launch
 
@@ -20,7 +21,6 @@ class GastosActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGastosBinding
     private lateinit var prefs: SharedPreferences
     private lateinit var adapter: GastosAdapter
-    private var token = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,40 +28,49 @@ class GastosActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         prefs = getSharedPreferences("gestor_prefs", MODE_PRIVATE)
-        token = prefs.getString("token", "") ?: ""
 
-        // Configurar RecyclerView
-        adapter = GastosAdapter { gastoId ->
-            eliminarGasto(gastoId)
-        }
+        adapter = GastosAdapter { gastoId -> eliminarGasto(gastoId) }
         binding.recyclerGastos.layoutManager = LinearLayoutManager(this)
         binding.recyclerGastos.adapter = adapter
 
-        // Cargar gastos
         cargarGastos()
 
-        // Botón agregar gasto
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.api.getMiHogar()
+                if (response.isSuccessful) {
+                    val hogar = response.body()?.get("hogar")
+                    if (hogar == null) {
+                        startActivity(Intent(this@GastosActivity, CrearHogarActivity::class.java))
+                    }
+                }
+            } catch (e: Exception) { }
+        }
+
         binding.btnAgregarGasto.setOnClickListener {
             mostrarDialogoAgregarGasto()
         }
 
-        // Botón cerrar sesión
         binding.btnCerrarSesion.setOnClickListener {
             prefs.edit().remove("token").apply()
+            RetrofitClient.setToken("")
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
-        // Botón resumen
         binding.btnResumen.setOnClickListener {
             startActivity(Intent(this, ResumenActivity::class.java))
+        }
+
+        binding.btnHogar.setOnClickListener {
+            startActivity(Intent(this, HogarActivity::class.java))
         }
     }
 
     private fun cargarGastos() {
         lifecycleScope.launch {
             try {
-                val response = RetrofitClient.api.getGastos(token)
+                val response = RetrofitClient.api.getGastos()
                 if (response.isSuccessful) {
                     adapter.actualizarGastos(response.body() ?: emptyList())
                 } else {
@@ -76,15 +85,11 @@ class GastosActivity : AppCompatActivity() {
     private fun mostrarDialogoAgregarGasto() {
         lifecycleScope.launch {
             try {
-                val categoriasResponse = RetrofitClient.api.getCategorias(token)
+                val categoriasResponse = RetrofitClient.api.getCategorias()
                 if (!categoriasResponse.isSuccessful) return@launch
-
                 val categorias = categoriasResponse.body() ?: return@launch
                 val nombresCategorias = categorias.map { it.nombre }.toTypedArray()
-
                 var categoriaSeleccionadaId = categorias[0].id
-
-                val dialogView = layoutInflater.inflate(android.R.layout.simple_list_item_1, null)
 
                 AlertDialog.Builder(this@GastosActivity)
                     .setTitle("Nueva categoría")
@@ -94,7 +99,6 @@ class GastosActivity : AppCompatActivity() {
                     }
                     .setNegativeButton("Cancelar", null)
                     .show()
-
             } catch (e: Exception) {
                 Toast.makeText(this@GastosActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
@@ -125,8 +129,7 @@ class GastosActivity : AppCompatActivity() {
                     Toast.makeText(this, "Importe inválido", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
-                val descripcion = descInput.text.toString()
-                crearGasto(categoriaId, importe, descripcion)
+                crearGasto(categoriaId, importe, descInput.text.toString())
             }
             .setNegativeButton("Cancelar", null)
             .show()
@@ -136,7 +139,6 @@ class GastosActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.api.crearGasto(
-                    token,
                     GastoRequest(categoriaId, descripcion, importe)
                 )
                 if (response.isSuccessful) {
@@ -158,7 +160,7 @@ class GastosActivity : AppCompatActivity() {
             .setPositiveButton("Eliminar") { _, _ ->
                 lifecycleScope.launch {
                     try {
-                        val response = RetrofitClient.api.eliminarGasto(token, gastoId)
+                        val response = RetrofitClient.api.eliminarGasto(gastoId)
                         if (response.isSuccessful) {
                             Toast.makeText(this@GastosActivity, "Gasto eliminado", Toast.LENGTH_SHORT).show()
                             cargarGastos()

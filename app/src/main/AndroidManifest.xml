@@ -34,6 +34,30 @@
         <activity
             android:name=".ui.gastos.ResumenActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.hogar.HogarActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.hogar.CrearHogarActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.hogar.IngresosActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.hogar.GastosComunesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.hogar.AhorroActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.hogar.GastosPeriodicosActivity"
+            android:exported="false" />
+
 
     </application>
 

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- BARRA SUPERIOR -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#1E88E5"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/btnVolverIngresos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="← Volver"
+                android:backgroundTint="#1565C0"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="💵 Ingresos del Mes"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <!-- TOTAL -->
+        <androidx.cardview.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total ingresos del hogar"
+                    android:textSize="14sp"
+                    android:textColor="#757575"/>
+
+                <TextView
+                    android:id="@+id/tvTotalIngresos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.00 €"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:textColor="#1E88E5"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvDetalleIngresos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sin ingresos registrados"
+                    android:textSize="14sp"
+                    android:textColor="#757575"
+                    android:layout_marginTop="8dp"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- PRESUPUESTO -->
+        <androidx.cardview.widget.CardView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📊 Distribución del presupuesto"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvPresupuesto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ahorro: 20% · Comunes: 50% · Personal: 30%"
+                    android:textSize="14sp"
+                    android:textColor="#757575"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- BOTONES -->
+        <Button
+            android:id="@+id/btnRegistrarIngreso"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="💵 Registrar mi ingreso"
+            android:backgroundTint="#1E88E5"
+            android:textColor="@android:color/white"
+            android:padding="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnConfigurarPresupuesto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚙️ Configurar presupuesto"
+            android:backgroundTint="#FB8C00"
+            android:textColor="@android:color/white"
+            android:padding="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"/>
+
+    </LinearLayout>
+
+</ScrollView>

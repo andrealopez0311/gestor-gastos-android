@@ -37,3 +37,53 @@ data class LoginResponse(
     val access_token: String,
     val token_type: String
 )
+
+data class HogarRequest(val nombre: String)
+
+data class InvitarRequest(val email: String)
+
+data class Hogar(
+    val id: Int,
+    val nombre: String,
+    val creador_id: Int
+)
+
+data class Miembro(
+    val id: Int,
+    val nombre: String,
+    val email: String,
+    val rol: String
+)
+
+data class IngresoRequest(
+    val importe: Double,
+    val descripcion: String = ""
+)
+
+data class PresupuestoRequest(
+    val porcentaje_ahorro: Double,
+    val porcentaje_comunes: Double,
+    val porcentaje_personal: Double
+)
+
+data class GastoComunRequest(
+    val categoria_id: Int,
+    val descripcion: String = "",
+    val importe: Double
+)
+
+data class AhorroRequest(
+    val nombre: String,
+    val meta: Double? = null
+)
+
+data class ActualizarAhorroRequest(
+    val cantidad: Double
+)
+
+data class GastoPeriodicoRequest(
+    val nombre: String,
+    val importe: Double,
+    val frecuencia: Int,
+    val proximo_pago: String? = null
+)

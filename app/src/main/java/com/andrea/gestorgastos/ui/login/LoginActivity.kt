@@ -27,7 +27,9 @@ class LoginActivity : AppCompatActivity() {
         prefs = getSharedPreferences("gestor_prefs", MODE_PRIVATE)
 
         // Si ya hay token guardado, ir directo a gastos
-        if (prefs.getString("token", null) != null) {
+        val savedToken = prefs.getString("token", null)
+        if (savedToken != null) {
+            RetrofitClient.setToken(savedToken)
             irAGastos()
             return
         }
@@ -59,8 +61,9 @@ class LoginActivity : AppCompatActivity() {
             try {
                 val response = RetrofitClient.api.login(LoginRequest(email, password))
                 if (response.isSuccessful) {
-                    val token = "Bearer ${response.body()!!.access_token}"
+                    val token = response.body()!!.access_token
                     prefs.edit().putString("token", token).apply()
+                    RetrofitClient.setToken(token)
                     irAGastos()
                 } else {
                     Toast.makeText(this@LoginActivity, "Credenciales incorrectas", Toast.LENGTH_SHORT).show()
