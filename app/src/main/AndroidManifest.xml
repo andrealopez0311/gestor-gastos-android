@@ -58,6 +58,14 @@
             android:name=".ui.hogar.GastosPeriodicosActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.hogar.EgresosActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.gastos.AhorroPersonalActivity"
+            android:exported="false" />
+
 
     </application>
 

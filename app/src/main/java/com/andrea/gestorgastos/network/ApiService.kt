@@ -75,7 +75,7 @@ interface ApiService {
 
     // ── AHORRO ──
     @GET("ahorro/")
-    suspend fun getAhorros(): Response<List<Map<String, Any>>>
+    suspend fun getAhorros(): Response<Map<String, Any>>
 
     @POST("ahorro/")
     suspend fun crearAhorro(@Body request: AhorroRequest): Response<Map<String, Any>>
@@ -107,6 +107,34 @@ interface ApiService {
 
     @GET("gastos-periodicos/resumen-presupuesto")
     suspend fun getResumenConPeriodicos(): Response<Map<String, Any>>
+
+    // ── EGRESOS ──
+    @GET("egresos/")
+    suspend fun getEgresos(): Response<Map<String, Any>>
+
+    // ── INGRESOS ACTUALIZADO ──
+    @DELETE("ingresos/{id}")
+    suspend fun eliminarIngreso(@Path("id") id: Int): Response<Map<String, Any>>
+
+    // ── AHORRO DISPONIBLE ──
+    @GET("ahorro/disponible")
+    suspend fun getDisponibleAhorro(): Response<Map<String, Any>>
+
+    // ── AHORRO PERSONAL ──
+    @GET("ahorro-personal/")
+    suspend fun getAhorrosPersonales(): Response<Map<String, Any>>
+
+    @POST("ahorro-personal/")
+    suspend fun crearAhorroPersonal(@Body request: AhorroPersonalRequest): Response<Map<String, Any>>
+
+    @PUT("ahorro-personal/{id}")
+    suspend fun anadirAhorroPersonal(
+        @Path("id") id: Int,
+        @Body request: AnadirAhorroPersonalRequest
+    ): Response<Map<String, Any>>
+
+    @DELETE("ahorro-personal/{id}")
+    suspend fun eliminarAhorroPersonal(@Path("id") id: Int): Response<Map<String, Any>>
 
 }
 

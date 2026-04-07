@@ -43,7 +43,9 @@ class AhorroActivity : AppCompatActivity() {
             try {
                 val response = RetrofitClient.api.getAhorros()
                 if (response.isSuccessful) {
-                    adapter.actualizarAhorros(response.body() ?: emptyList())
+                    val body = response.body()
+                    val fondos = body?.get("fondos") as? List<Map<String, Any>> ?: emptyList()
+                    adapter.actualizarAhorros(fondos)
                 }
             } catch (e: Exception) {
                 Toast.makeText(this@AhorroActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()

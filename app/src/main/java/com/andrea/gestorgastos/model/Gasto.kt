@@ -57,7 +57,10 @@ data class Miembro(
 
 data class IngresoRequest(
     val importe: Double,
-    val descripcion: String = ""
+    val descripcion: String = "",
+    val fuente: String = "",
+    val mes: Int? = null,
+    val anio: Int? = null
 )
 
 data class PresupuestoRequest(
@@ -86,4 +89,18 @@ data class GastoPeriodicoRequest(
     val importe: Double,
     val frecuencia: Int,
     val proximo_pago: String? = null
+)
+
+data class AñadirAhorroRequest(
+    val cantidad: Double,
+    val fondo_id: Int
+)
+
+data class AhorroPersonalRequest(
+    val nombre: String,
+    val meta: Double? = null
+)
+
+data class AnadirAhorroPersonalRequest(
+    val cantidad: Double
 )

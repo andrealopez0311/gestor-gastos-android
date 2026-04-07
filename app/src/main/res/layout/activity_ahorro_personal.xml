@@ -15,7 +15,7 @@
         android:gravity="center_vertical">
 
         <Button
-            android:id="@+id/btnVolverIngresos"
+            android:id="@+id/btnVolverAhorroPersonal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="← Volver"
@@ -26,7 +26,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="💵 Ingresos del Mes"
+            android:text="💙 Mi Ahorro Personal"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -34,7 +34,7 @@
 
     </LinearLayout>
 
-    <!-- TOTAL -->
+    <!-- PANEL DISPONIBLE -->
     <androidx.cardview.widget.CardView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -52,76 +52,48 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total ingresos del hogar"
+                android:text="Disponible de tu mesada para ahorrar"
                 android:textSize="14sp"
                 android:textColor="#757575"/>
 
             <TextView
-                android:id="@+id/tvTotalIngresos"
+                android:id="@+id/tvDisponibleAhorroPersonal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0.00 €"
-                android:textSize="36sp"
+                android:textSize="32sp"
                 android:textStyle="bold"
                 android:textColor="#1E88E5"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="4dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Presupuesto"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#212121"
-                android:layout_marginTop="12dp"/>
-
-            <TextView
-                android:id="@+id/tvPresupuesto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ahorro: 20%"
-                android:textSize="14sp"
-                android:textColor="#757575"
+                android:text="Este dinero sale de tu mesada personal"
+                android:textSize="12sp"
+                android:textColor="#BDBDBD"
                 android:layout_marginTop="4dp"/>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
-    <!-- BOTONES -->
-    <LinearLayout
+    <!-- BOTÓN CREAR FONDO -->
+    <Button
+        android:id="@+id/btnCrearFondoPersonal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="8dp">
+        android:text="+ Crear Fondo Personal"
+        android:backgroundTint="#1E88E5"
+        android:textColor="@android:color/white"
+        android:padding="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"/>
 
-        <Button
-            android:id="@+id/btnRegistrarIngreso"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="4dp"
-            android:text="+ Añadir Ingreso"
-            android:backgroundTint="#1E88E5"
-            android:textColor="@android:color/white"/>
-
-        <Button
-            android:id="@+id/btnConfigurarPresupuesto"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="4dp"
-            android:text="⚙️ Presupuesto"
-            android:backgroundTint="#FB8C00"
-            android:textColor="@android:color/white"/>
-
-    </LinearLayout>
-
-    <!-- LISTA DE INGRESOS -->
+    <!-- LISTA -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerIngresos"
+        android:id="@+id/recyclerAhorroPersonal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp"/>

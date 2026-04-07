@@ -15,6 +15,7 @@ import com.andrea.gestorgastos.ui.hogar.CrearHogarActivity
 import com.andrea.gestorgastos.ui.hogar.HogarActivity
 import com.andrea.gestorgastos.ui.login.LoginActivity
 import kotlinx.coroutines.launch
+import com.andrea.gestorgastos.ui.gastos.AhorroPersonalActivity
 
 class GastosActivity : AppCompatActivity() {
 
@@ -34,6 +35,7 @@ class GastosActivity : AppCompatActivity() {
         binding.recyclerGastos.adapter = adapter
 
         cargarGastos()
+        cargarMesada()
 
         lifecycleScope.launch {
             try {
@@ -65,6 +67,11 @@ class GastosActivity : AppCompatActivity() {
         binding.btnHogar.setOnClickListener {
             startActivity(Intent(this, HogarActivity::class.java))
         }
+
+        binding.btnAhorroPersonal.setOnClickListener {
+            startActivity(Intent(this, AhorroPersonalActivity::class.java))
+        }
+
     }
 
     private fun cargarGastos() {
@@ -172,5 +179,36 @@ class GastosActivity : AppCompatActivity() {
             }
             .setNegativeButton("Cancelar", null)
             .show()
+    }
+
+    private fun cargarMesada() {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.api.getResumenHogar()
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    val personal = body?.get("personal") as? Map<*, *>
+                    val mesada = personal?.get("mesada") as? Double ?: 0.0
+                    val gastado = personal?.get("gastado") as? Double ?: 0.0
+                    val disponible = personal?.get("disponible") as? Double ?: 0.0
+
+                    binding.tvMesada.text = "%.2f €".format(mesada)
+                    binding.tvGastadoMesada.text = "%.2f €".format(gastado)
+                    binding.tvDisponibleMesada.text = "%.2f €".format(disponible)
+
+                    if (disponible < 0) {
+                        binding.tvDisponibleMesada.setTextColor(
+                            android.graphics.Color.parseColor("#E53935")
+                        )
+                    } else {
+                        binding.tvDisponibleMesada.setTextColor(
+                            android.graphics.Color.parseColor("#43A047")
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                // Si falla no bloqueamos la pantalla
+            }
+        }
     }
 }

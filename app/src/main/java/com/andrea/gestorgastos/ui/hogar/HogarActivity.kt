@@ -1,5 +1,6 @@
 package com.andrea.gestorgastos.ui.hogar
 
+import com.andrea.gestorgastos.ui.hogar.EgresosActivity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -58,6 +59,10 @@ class HogarActivity : AppCompatActivity() {
         binding.btnPeriodicos.setOnClickListener {
             startActivity(Intent(this, GastosPeriodicosActivity::class.java))
         }
+
+        binding.btnEgresos.setOnClickListener {
+            startActivity(Intent(this, EgresosActivity::class.java))
+        }
     }
 
     override fun onResume() {
@@ -93,11 +98,15 @@ class HogarActivity : AppCompatActivity() {
 
                     val ingresoTotal = resumen?.get("ingreso_total") as? Double ?: 0.0
                     val ahorro = montos?.get("ahorro") as? Double ?: 0.0
-                    val personalPorMiembro = montos?.get("personal_por_miembro") as? Double ?: 0.0
+                    val egresosResponse = RetrofitClient.api.getEgresos()
+                    if (egresosResponse.isSuccessful) {
+                        val totalEgresos = egresosResponse.body()?.get("total_egresos") as? Double ?: 0.0
+                        binding.tvEgresosTotal.text = "%.2f €".format(totalEgresos)
+                    }
 
                     binding.tvIngresoTotal.text = "%.2f €".format(ingresoTotal)
                     binding.tvAhorro.text = "%.2f €".format(ahorro)
-                    binding.tvPersonal.text = "%.2f €".format(personalPorMiembro)
+
                 }
 
             } catch (e: Exception) {

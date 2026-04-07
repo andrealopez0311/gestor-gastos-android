@@ -13,6 +13,7 @@ import com.andrea.gestorgastos.model.RegisterRequest
 import com.andrea.gestorgastos.network.RetrofitClient
 import com.andrea.gestorgastos.ui.gastos.GastosActivity
 import kotlinx.coroutines.launch
+import com.andrea.gestorgastos.ui.hogar.HogarActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -90,7 +91,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun irAGastos() {
-        startActivity(Intent(this, GastosActivity::class.java))
+        startActivity(Intent(this, HogarActivity::class.java))
         finish()
     }
 }

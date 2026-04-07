@@ -125,18 +125,18 @@
                         android:gravity="center">
 
                         <TextView
-                            android:id="@+id/tvPersonal"
+                            android:id="@+id/tvEgresosTotal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0.00 €"
                             android:textSize="22sp"
                             android:textStyle="bold"
-                            android:textColor="#FB8C00"/>
+                            android:textColor="#E53935"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Personal"
+                            android:text="Egresos"
                             android:textSize="12sp"
                             android:textColor="#757575"/>
 
@@ -148,7 +148,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- BOTONES DE ACCIÓN FILA 1 -->
+        <!-- BOTONES FILA 1 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -179,14 +179,14 @@
 
         </LinearLayout>
 
-        <!-- BOTONES DE ACCIÓN FILA 2 -->
+        <!-- BOTONES FILA 2 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingBottom="16dp">
+            android:paddingBottom="8dp">
 
             <Button
                 android:id="@+id/btnGastosPersonales"
@@ -210,19 +210,32 @@
 
         </LinearLayout>
 
+        <!-- BOTONES FILA 3 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingBottom="16dp">
+            android:paddingBottom="8dp">
+
+            <Button
+                android:id="@+id/btnEgresos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="4dp"
+                android:text="📤 Egresos"
+                android:backgroundTint="#E53935"
+                android:textColor="@android:color/white"/>
 
             <Button
                 android:id="@+id/btnPeriodicos"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="📅 Gastos Periódicos"
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                android:text="📅 Periódicos"
                 android:backgroundTint="#7B1FA2"
                 android:textColor="@android:color/white"/>
 
