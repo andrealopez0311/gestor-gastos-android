@@ -22,36 +22,48 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvCategoriaComun"
+                android:id="@+id/tvNombreCuota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="#E53935"/>
+                android:textColor="#7B1FA2"/>
 
             <TextView
-                android:id="@+id/tvDescripcionComun"
+                android:id="@+id/tvFechaCuota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="#757575"
                 android:layout_marginTop="4dp"/>
 
             <TextView
-                android:id="@+id/tvAnadidoPor"
+                android:id="@+id/tvAlertaCuota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="11sp"
-                android:textColor="#BDBDBD"
-                android:layout_marginTop="2dp"/>
+                android:textColor="@android:color/white"
+                android:background="#E53935"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/tvFechaComun"
+                android:id="@+id/tvCubiertaCuota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="11sp"
-                android:textColor="#BDBDBD"
-                android:layout_marginTop="2dp"/>
+                android:textColor="@android:color/white"
+                android:background="#43A047"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -62,32 +74,32 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/tvImporteComun"
+                android:id="@+id/tvImporteCuota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#E53935"/>
+                android:textColor="#7B1FA2"/>
 
             <Button
-                android:id="@+id/btnEditarComun"
+                android:id="@+id/btnPagarCuota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="✏️"
-                android:backgroundTint="#1E88E5"
+                android:text="✓ Pagar"
+                android:backgroundTint="#43A047"
                 android:textColor="@android:color/white"
                 android:layout_marginTop="8dp"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"/>
 
             <Button
-                android:id="@+id/btnEliminarComun"
+                android:id="@+id/btnEliminarCuota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🗑"
                 android:backgroundTint="#EF5350"
                 android:textColor="@android:color/white"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"/>
 

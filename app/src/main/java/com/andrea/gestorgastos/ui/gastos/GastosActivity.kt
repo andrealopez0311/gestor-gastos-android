@@ -74,6 +74,12 @@ class GastosActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        cargarGastos()
+        cargarMesada()
+    }
+
     private fun cargarGastos() {
         lifecycleScope.launch {
             try {

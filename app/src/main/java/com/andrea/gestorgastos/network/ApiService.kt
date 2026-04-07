@@ -84,7 +84,7 @@ interface ApiService {
     suspend fun actualizarAhorro(
         @Path("id") id: Int,
         @Body request: ActualizarAhorroRequest
-    ): Response<Map<String, Any>>
+    ): Response<Map<String, Any?>>
 
     @DELETE("ahorro/{id}")
     suspend fun eliminarAhorro(@Path("id") id: Int): Response<Map<String, Any>>
@@ -135,6 +135,35 @@ interface ApiService {
 
     @DELETE("ahorro-personal/{id}")
     suspend fun eliminarAhorroPersonal(@Path("id") id: Int): Response<Map<String, Any>>
+
+    // ── EDITAR GASTOS ──
+    @PUT("gastos-comunes/{id}")
+    suspend fun editarGastoComun(
+        @Path("id") id: Int,
+        @Body request: EditarGastoComunRequest
+    ): Response<Map<String, Any>>
+
+    @PUT("gastos-periodicos/{id}")
+    suspend fun editarGastoPeriodico(
+        @Path("id") id: Int,
+        @Body request: EditarGastoPeriodicoRequest
+    ): Response<Map<String, Any>>
+
+    // ── FONDO PERIÓDICOS ──
+    @GET("fondo-periodicos/")
+    suspend fun getFondoPeriodicos(): Response<Map<String, Any>>
+
+    @POST("fondo-periodicos/acumular")
+    suspend fun acumularMes(): Response<Map<String, Any>>
+
+    @POST("fondo-periodicos/cuotas")
+    suspend fun crearCuota(@Body request: CuotaRequest): Response<Map<String, Any>>
+
+    @PUT("fondo-periodicos/cuotas/{id}/pagar")
+    suspend fun pagarCuota(@Path("id") id: Int): Response<Map<String, Any>>
+
+    @DELETE("fondo-periodicos/cuotas/{id}")
+    suspend fun eliminarCuota(@Path("id") id: Int): Response<Map<String, Any>>
 
 }
 

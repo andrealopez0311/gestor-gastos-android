@@ -81,7 +81,8 @@ data class AhorroRequest(
 )
 
 data class ActualizarAhorroRequest(
-    val cantidad: Double
+    val cantidad: Double,
+    val es_voluntario: Boolean = false
 )
 
 data class GastoPeriodicoRequest(
@@ -104,3 +105,24 @@ data class AhorroPersonalRequest(
 data class AnadirAhorroPersonalRequest(
     val cantidad: Double
 )
+
+data class EditarGastoComunRequest(
+    val descripcion: String? = null,
+    val importe: Double? = null,
+    val fecha: String? = null,
+    val categoria_id: Int? = null
+)
+
+data class EditarGastoPeriodicoRequest(
+    val nombre: String? = null,
+    val importe: Double? = null,
+    val frecuencia: Int? = null,
+    val proximo_pago: String? = null
+)
+
+data class CuotaRequest(
+    val gasto_periodico_id: Int,
+    val importe: Double,
+    val fecha_pago: String
+)
+

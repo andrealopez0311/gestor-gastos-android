@@ -21,9 +21,10 @@ class GastosComunesActivity : AppCompatActivity() {
         binding = ActivityGastosComunesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = GastosComunesAdapter { gastoId ->
-            eliminarGastoComun(gastoId)
-        }
+        adapter = GastosComunesAdapter(
+            onEliminar = { gastoId -> eliminarGastoComun(gastoId) },
+            onEditar = { gasto -> mostrarDialogoEditar(gasto) }
+        )
         binding.recyclerGastosComunes.layoutManager = LinearLayoutManager(this)
         binding.recyclerGastosComunes.adapter = adapter
 
@@ -149,5 +150,70 @@ class GastosComunesActivity : AppCompatActivity() {
             }
             .setNegativeButton("Cancelar", null)
             .show()
+    }
+
+    private fun mostrarDialogoEditar(gasto: Map<String, Any>) {
+        val id = (gasto["id"] as? Double)?.toInt() ?: 0
+        val importeActual = gasto["importe"] as? Double ?: 0.0
+        val descripcionActual = gasto["descripcion"] as? String ?: ""
+        val fechaActual = gasto["fecha"] as? String ?: ""
+
+        val importeInput = android.widget.EditText(this)
+        importeInput.hint = "Importe en €"
+        importeInput.setText(importeActual.toString())
+        importeInput.inputType = android.text.InputType.TYPE_CLASS_NUMBER or
+                android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+
+        val descInput = android.widget.EditText(this)
+        descInput.hint = "Descripción"
+        descInput.setText(descripcionActual)
+
+        val fechaInput = android.widget.EditText(this)
+        fechaInput.hint = "Fecha (YYYY-MM-DD)"
+        fechaInput.setText(fechaActual)
+
+        val layout = android.widget.LinearLayout(this)
+        layout.orientation = android.widget.LinearLayout.VERTICAL
+        layout.setPadding(50, 20, 50, 0)
+        layout.addView(importeInput)
+        layout.addView(descInput)
+        layout.addView(fechaInput)
+
+        AlertDialog.Builder(this)
+            .setTitle("Editar gasto común")
+            .setView(layout)
+            .setPositiveButton("Guardar") { _, _ ->
+                val importe = importeInput.text.toString().toDoubleOrNull()
+                if (importe == null || importe <= 0) {
+                    Toast.makeText(this, "Importe inválido", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                editarGastoComun(id, importe, descInput.text.toString(), fechaInput.text.toString())
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun editarGastoComun(id: Int, importe: Double, descripcion: String, fecha: String) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.api.editarGastoComun(
+                    id,
+                    com.andrea.gestorgastos.model.EditarGastoComunRequest(
+                        descripcion = descripcion,
+                        importe = importe,
+                        fecha = fecha.ifEmpty { null }
+                    )
+                )
+                if (response.isSuccessful) {
+                    Toast.makeText(this@GastosComunesActivity, "Gasto actualizado ✅", Toast.LENGTH_SHORT).show()
+                    cargarDatos()
+                } else {
+                    Toast.makeText(this@GastosComunesActivity, "Error al actualizar", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@GastosComunesActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

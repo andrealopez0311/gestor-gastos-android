@@ -131,6 +131,17 @@
                 android:paddingRight="12dp"/>
 
             <Button
+                android:id="@+id/btnEditarPeriodico"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✏️"
+                android:backgroundTint="#1E88E5"
+                android:textColor="@android:color/white"
+                android:layout_marginLeft="8dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"/>
+
+            <Button
                 android:id="@+id/btnEliminarPeriodico"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -14,8 +14,13 @@ import kotlinx.coroutines.launch
 
 class IngresosActivity : AppCompatActivity() {
 
+    private var montoAhorrosPendiente: Double = 0.0
     private lateinit var binding: ActivityIngresosBinding
     private lateinit var adapter: IngresosAdapter
+
+    companion object {
+        const val REQUEST_CREAR_FONDO = 1001
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +43,18 @@ class IngresosActivity : AppCompatActivity() {
         cargarDatos()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CREAR_FONDO && montoAhorrosPendiente > 0) {
+            val monto = montoAhorrosPendiente
+            montoAhorrosPendiente = 0.0
+            mostrarDialogoSeleccionFondo(monto)
+        }
+    }
+
     private fun cargarDatos() {
         lifecycleScope.launch {
             try {
-                // Cargar ingresos del hogar
                 val response = RetrofitClient.api.getIngresosHogar()
                 if (response.isSuccessful) {
                     val body = response.body()
@@ -51,7 +64,6 @@ class IngresosActivity : AppCompatActivity() {
                     adapter.actualizarIngresos(ingresos)
                 }
 
-                // Cargar presupuesto
                 val presupuestoResponse = RetrofitClient.api.getPresupuesto()
                 if (presupuestoResponse.isSuccessful) {
                     val p = presupuestoResponse.body()
@@ -136,8 +148,8 @@ class IngresosActivity : AppCompatActivity() {
                 )
                 if (response.isSuccessful) {
                     Toast.makeText(this@IngresosActivity, "Ingreso añadido ✅", Toast.LENGTH_LONG).show()
-                    mostrarDialogoAhorro(importe)
                     cargarDatos()
+                    mostrarDialogoAhorro(importe)
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "Sin detalle"
                     val code = response.code()
@@ -152,7 +164,8 @@ class IngresosActivity : AppCompatActivity() {
     private fun mostrarDialogoAhorro(ingresoImporte: Double) {
         lifecycleScope.launch {
             try {
-                val pctAhorro = 20.0
+                val presupuestoResponse = RetrofitClient.api.getPresupuesto()
+                val pctAhorro = (presupuestoResponse.body()?.get("porcentaje_ahorro") as? Double) ?: 20.0
                 val montoAhorro = ingresoImporte * pctAhorro / 100
 
                 val fondosResponse = RetrofitClient.api.getAhorros()
@@ -164,17 +177,48 @@ class IngresosActivity : AppCompatActivity() {
                     runOnUiThread {
                         AlertDialog.Builder(this@IngresosActivity)
                             .setTitle("💰 Sin fondos de ahorro")
-                            .setMessage("Tienes %.2f € para ahorrar. Crea un fondo primero.".format(montoAhorro))
-                            .setPositiveButton("Crear fondo ahora") { _, _ ->
-                                startActivity(android.content.Intent(this@IngresosActivity, AhorroActivity::class.java))
+                            .setMessage("Tienes %.2f € para ahorrar. ¿Qué quieres hacer?".format(montoAhorro))
+                            .setPositiveButton("Crear fondo familiar") { _, _ ->
+                                montoAhorrosPendiente = montoAhorro
+                                startActivityForResult(
+                                    android.content.Intent(this@IngresosActivity, AhorroActivity::class.java),
+                                    REQUEST_CREAR_FONDO
+                                )
                             }
-                            .setCancelable(false)
+                            .setNeutralButton("Ahorro personal") { _, _ ->
+                                montoAhorrosPendiente = montoAhorro
+                                startActivityForResult(
+                                    android.content.Intent(this@IngresosActivity, com.andrea.gestorgastos.ui.gastos.AhorroPersonalActivity::class.java),
+                                    REQUEST_CREAR_FONDO
+                                )
+                            }
+                            .setNegativeButton("Después", null)
                             .show()
                     }
                     return@launch
                 }
 
+                mostrarDialogoSeleccionFondo(montoAhorro)
+
+            } catch (e: Exception) {
+                Toast.makeText(this@IngresosActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun mostrarDialogoSeleccionFondo(montoAhorro: Double) {
+        lifecycleScope.launch {
+            try {
+                val fondosResponse = RetrofitClient.api.getAhorros()
+                val body = fondosResponse.body()
+                val fondos = body?.get("fondos") as? List<*> ?: emptyList<Any>()
                 val listaFondos = fondos.filterIsInstance<Map<String, Any>>()
+
+                if (listaFondos.isEmpty()) {
+                    Toast.makeText(this@IngresosActivity, "No hay fondos disponibles", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+
                 val nombres = listaFondos.map {
                     val nombre = it["nombre"]?.toString() ?: "Fondo"
                     val acumulado = (it["acumulado"] as? Double) ?: 0.0
@@ -197,6 +241,7 @@ class IngresosActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun anadirAlFondo(fondoId: Int, cantidad: Double) {
         lifecycleScope.launch {
             try {

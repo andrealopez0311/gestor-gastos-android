@@ -8,7 +8,8 @@ import com.andrea.gestorgastos.databinding.ItemGastoPeriodicoBinding
 
 class GastosPeriodicosAdapter(
     private val onPagar: (Int) -> Unit,
-    private val onEliminar: (Int) -> Unit
+    private val onEliminar: (Int) -> Unit,
+    private val onEditar: (Map<String, Any>) -> Unit
 ) : RecyclerView.Adapter<GastosPeriodicosAdapter.PeriodicoViewHolder>() {
 
     private var gastos = listOf<Map<String, Any>>()
@@ -61,15 +62,10 @@ class GastosPeriodicosAdapter(
             }
             binding.tvFrecuencia.text = frecuenciaTexto
 
-            if (proximoPago != null) {
-                binding.tvProximoPago.text = "Próximo pago: $proximoPago"
-            } else {
-                binding.tvProximoPago.text = "Sin fecha de pago"
-            }
+            binding.tvProximoPago.text = if (proximoPago != null) "Próximo pago: $proximoPago" else "Sin fecha"
 
             val progreso = if (importe > 0) ((acumulado / importe) * 100).toInt() else 0
             binding.progressPeriodico.progress = progreso.coerceAtMost(100)
-
             binding.tvAcumuladoPeriodico.text = "Acumulado: %.2f € / %.2f €".format(acumulado, importe)
 
             if (alerta && diasRestantes != null) {
@@ -81,18 +77,15 @@ class GastosPeriodicosAdapter(
 
             if (listo) {
                 binding.progressPeriodico.progressTintList =
-                    android.content.res.ColorStateList.valueOf(
-                        android.graphics.Color.parseColor("#43A047")
-                    )
+                    android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#43A047"))
             } else {
                 binding.progressPeriodico.progressTintList =
-                    android.content.res.ColorStateList.valueOf(
-                        android.graphics.Color.parseColor("#7B1FA2")
-                    )
+                    android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#7B1FA2"))
             }
 
             binding.btnPagarPeriodico.setOnClickListener { onPagar(id) }
             binding.btnEliminarPeriodico.setOnClickListener { onEliminar(id) }
+            binding.btnEditarPeriodico.setOnClickListener { onEditar(gasto) }
         }
     }
 }

@@ -16,6 +16,7 @@ import com.andrea.gestorgastos.ui.gastos.GastosActivity
 import com.andrea.gestorgastos.ui.gastos.ResumenActivity
 import kotlinx.coroutines.launch
 import com.andrea.gestorgastos.ui.hogar.GastosPeriodicosActivity
+import com.andrea.gestorgastos.ui.hogar.FondoPeriodicosActivity
 
 class HogarActivity : AppCompatActivity() {
 
@@ -62,6 +63,10 @@ class HogarActivity : AppCompatActivity() {
 
         binding.btnEgresos.setOnClickListener {
             startActivity(Intent(this, EgresosActivity::class.java))
+        }
+
+        binding.btnFondoPeriodicos.setOnClickListener {
+            startActivity(Intent(this, FondoPeriodicosActivity::class.java))
         }
     }
 

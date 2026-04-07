@@ -66,6 +66,10 @@
             android:name=".ui.gastos.AhorroPersonalActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.hogar.FondoPeriodicosActivity"
+            android:exported="false" />
+
 
     </application>
 

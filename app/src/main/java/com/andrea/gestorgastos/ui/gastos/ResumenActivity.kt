@@ -42,6 +42,18 @@ class ResumenActivity : AppCompatActivity() {
                     binding.tvTotalMes.text = "%.2f €".format(total)
                     adapter.actualizarItems(datos)
                     configurarGrafica(datos)
+                    val resumenResponse = RetrofitClient.api.getResumenHogar()
+                    if (resumenResponse.isSuccessful) {
+                        val resumen = resumenResponse.body()
+                        val personal = resumen?.get("personal") as? Map<*, *>
+                        val gastado = personal?.get("gastado") as? Double ?: 0.0
+                        val ahorroVoluntario = personal?.get("ahorro_voluntario") as? Double ?: 0.0
+                        val disponible = personal?.get("disponible") as? Double ?: 0.0
+
+                        binding.tvGastadoResumen.text = "%.2f €".format(gastado)
+                        binding.tvAhorroVoluntarioResumen.text = "%.2f €".format(ahorroVoluntario)
+                        binding.tvDisponibleResumen.text = "%.2f €".format(disponible)
+                    }
                 } else {
                     Toast.makeText(this@ResumenActivity, "Error al cargar resumen", Toast.LENGTH_SHORT).show()
                 }

@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.andrea.gestorgastos.databinding.ItemGastoComunBinding
 
 class GastosComunesAdapter(
-    private val onEliminar: (Int) -> Unit
+    private val onEliminar: (Int) -> Unit,
+    private val onEditar: (Map<String, Any>) -> Unit
 ) : RecyclerView.Adapter<GastosComunesAdapter.GastoComunViewHolder>() {
 
     private var gastos = listOf<Map<String, Any>>()
@@ -47,9 +48,8 @@ class GastosComunesAdapter(
             binding.tvFechaComun.text = fecha
             binding.tvAnadidoPor.text = "Añadido por $anadidoPor"
 
-            binding.btnEliminarComun.setOnClickListener {
-                onEliminar(id)
-            }
+            binding.btnEliminarComun.setOnClickListener { onEliminar(id) }
+            binding.btnEditarComun.setOnClickListener { onEditar(gasto) }
         }
     }
 }

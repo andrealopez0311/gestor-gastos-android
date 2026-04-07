@@ -23,7 +23,7 @@ class AhorroActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         adapter = AhorroAdapter(
-            onAnadir = { ahorroId -> mostrarDialogoAnadir(ahorroId) },
+            onAnadir = { ahorroId, _ -> mostrarDialogoAnadir(ahorroId) },
             onEliminar = { ahorroId -> eliminarAhorro(ahorroId) }
         )
         binding.recyclerAhorros.layoutManager = LinearLayoutManager(this)
@@ -32,10 +32,7 @@ class AhorroActivity : AppCompatActivity() {
         cargarAhorros()
 
         binding.btnVolverAhorro.setOnClickListener { finish() }
-
-        binding.btnCrearFondo.setOnClickListener {
-            mostrarDialogoCrearFondo()
-        }
+        binding.btnCrearFondo.setOnClickListener { mostrarDialogoCrearFondo() }
     }
 
     private fun cargarAhorros() {
@@ -85,6 +82,51 @@ class AhorroActivity : AppCompatActivity() {
     }
 
     private fun mostrarDialogoAnadir(ahorroId: Int) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.api.getDisponibleAhorro()
+                val body = response.body()
+                val disponible = when (val d = body?.get("disponible_para_ahorrar")) {
+                    is Double -> d
+                    is Int -> d.toDouble()
+                    is Long -> d.toDouble()
+                    else -> 0.0
+                }
+
+                val presupuestoResponse = RetrofitClient.api.getPresupuesto()
+                val pctAhorro = (presupuestoResponse.body()?.get("porcentaje_ahorro") as? Double)?.toInt() ?: 20
+
+                runOnUiThread {
+                    if (disponible <= 0) {
+                        AlertDialog.Builder(this@AhorroActivity)
+                            .setTitle("💰 Límite del mes alcanzado")
+                            .setMessage("Ya has ahorrado el $pctAhorro%% de los ingresos del mes. Solo puedes añadir ahorro voluntario de tu mesada.")
+                            .setPositiveButton("Ahorro voluntario") { _, _ ->
+                                mostrarDialogoCantidad(ahorroId, true)
+                            }
+                            .setNegativeButton("Cancelar", null)
+                            .show()
+                    } else {
+                        val opciones = arrayOf(
+                            "💰 Ahorro del mes ($pctAhorro%%) · %.2f€ disponibles".format(disponible),
+                            "🎯 Ahorro voluntario (de mi mesada)"
+                        )
+                        AlertDialog.Builder(this@AhorroActivity)
+                            .setTitle("¿Qué tipo de ahorro?")
+                            .setItems(opciones) { _, which ->
+                                mostrarDialogoCantidad(ahorroId, which == 1)
+                            }
+                            .setNegativeButton("Cancelar", null)
+                            .show()
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@AhorroActivity, "Error: ${e.javaClass.name}: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun mostrarDialogoCantidad(ahorroId: Int, esVoluntario: Boolean) {
         val input = android.widget.EditText(this)
         input.hint = "Cantidad a añadir en €"
         input.inputType = android.text.InputType.TYPE_CLASS_NUMBER or
@@ -96,7 +138,7 @@ class AhorroActivity : AppCompatActivity() {
         layout.addView(input)
 
         AlertDialog.Builder(this)
-            .setTitle("Añadir al ahorro")
+            .setTitle(if (esVoluntario) "🎯 Ahorro voluntario" else "💰 Añadir al ahorro")
             .setView(layout)
             .setPositiveButton("Añadir") { _, _ ->
                 val cantidad = input.text.toString().toDoubleOrNull()
@@ -104,7 +146,7 @@ class AhorroActivity : AppCompatActivity() {
                     Toast.makeText(this, "Cantidad inválida", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
-                anadirAhorro(ahorroId, cantidad)
+                anadirAhorro(ahorroId, cantidad, esVoluntario)
             }
             .setNegativeButton("Cancelar", null)
             .show()
@@ -126,20 +168,22 @@ class AhorroActivity : AppCompatActivity() {
         }
     }
 
-    private fun anadirAhorro(ahorroId: Int, cantidad: Double) {
+    private fun anadirAhorro(ahorroId: Int, cantidad: Double, esVoluntario: Boolean) {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.api.actualizarAhorro(
-                    ahorroId, ActualizarAhorroRequest(cantidad)
+                    ahorroId, ActualizarAhorroRequest(cantidad, esVoluntario)
                 )
                 if (response.isSuccessful) {
                     Toast.makeText(this@AhorroActivity, "Ahorro actualizado ✅", Toast.LENGTH_SHORT).show()
                     cargarAhorros()
                 } else {
-                    Toast.makeText(this@AhorroActivity, "Error al actualizar", Toast.LENGTH_SHORT).show()
+                    val error = response.errorBody()?.string() ?: "Error"
+                    Toast.makeText(this@AhorroActivity, error, Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@AhorroActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                val msg = "${e.javaClass.name}: ${e.message} / cause: ${e.cause}"
+                Toast.makeText(this@AhorroActivity, msg, Toast.LENGTH_LONG).show()
             }
         }
     }

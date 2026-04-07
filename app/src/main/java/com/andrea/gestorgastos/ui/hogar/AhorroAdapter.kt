@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.andrea.gestorgastos.databinding.ItemAhorroBinding
 
 class AhorroAdapter(
-    private val onAnadir: (Int) -> Unit,
+    private val onAnadir: (Int, Boolean) -> Unit,
     private val onEliminar: (Int) -> Unit
 ) : RecyclerView.Adapter<AhorroAdapter.AhorroViewHolder>() {
 
@@ -51,9 +51,7 @@ class AhorroAdapter(
                 binding.tvMetaAhorro.text = "Sin meta definida · %.2f € ahorrados".format(acumulado)
             }
 
-            binding.btnAnadirAhorro.setOnClickListener {
-                onAnadir(id)
-            }
+            binding.btnAnadirAhorro.setOnClickListener { onAnadir(id, false) }
 
             binding.btnEliminarAhorro.setOnClickListener {
                 onEliminar(id)
