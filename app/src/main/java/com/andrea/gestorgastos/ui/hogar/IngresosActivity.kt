@@ -147,7 +147,7 @@ class IngresosActivity : AppCompatActivity() {
                     IngresoRequest(importe, descripcion, fuente)
                 )
                 if (response.isSuccessful) {
-                    Toast.makeText(this@IngresosActivity, "Ingreso añadido ✅", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@IngresosActivity, "Ingreso añadido ✅", Toast.LENGTH_SHORT).show()
                     cargarDatos()
                     mostrarDialogoAhorro(importe)
                 } else {
@@ -169,26 +169,17 @@ class IngresosActivity : AppCompatActivity() {
                 val montoAhorro = ingresoImporte * pctAhorro / 100
 
                 val fondosResponse = RetrofitClient.api.getAhorros()
-                if (!fondosResponse.isSuccessful) return@launch
-
                 val fondos = fondosResponse.body()?.get("fondos") as? List<*> ?: emptyList<Any>()
 
-                if (fondos.isEmpty()) {
+                if (!fondosResponse.isSuccessful || fondos.isEmpty()) {
                     runOnUiThread {
                         AlertDialog.Builder(this@IngresosActivity)
                             .setTitle("💰 Sin fondos de ahorro")
-                            .setMessage("Tienes %.2f € para ahorrar. ¿Qué quieres hacer?".format(montoAhorro))
-                            .setPositiveButton("Crear fondo familiar") { _, _ ->
+                            .setMessage("Tienes %.2f € para ahorrar. Crea un fondo primero.".format(montoAhorro))
+                            .setPositiveButton("Crear fondo") { _, _ ->
                                 montoAhorrosPendiente = montoAhorro
                                 startActivityForResult(
                                     android.content.Intent(this@IngresosActivity, AhorroActivity::class.java),
-                                    REQUEST_CREAR_FONDO
-                                )
-                            }
-                            .setNeutralButton("Ahorro personal") { _, _ ->
-                                montoAhorrosPendiente = montoAhorro
-                                startActivityForResult(
-                                    android.content.Intent(this@IngresosActivity, com.andrea.gestorgastos.ui.gastos.AhorroPersonalActivity::class.java),
                                     REQUEST_CREAR_FONDO
                                 )
                             }

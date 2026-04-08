@@ -37,18 +37,6 @@ class GastosActivity : AppCompatActivity() {
         cargarGastos()
         cargarMesada()
 
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.api.getMiHogar()
-                if (response.isSuccessful) {
-                    val hogar = response.body()?.get("hogar")
-                    if (hogar == null) {
-                        startActivity(Intent(this@GastosActivity, CrearHogarActivity::class.java))
-                    }
-                }
-            } catch (e: Exception) { }
-        }
-
         binding.btnAgregarGasto.setOnClickListener {
             mostrarDialogoAgregarGasto()
         }
@@ -71,7 +59,6 @@ class GastosActivity : AppCompatActivity() {
         binding.btnAhorroPersonal.setOnClickListener {
             startActivity(Intent(this, AhorroPersonalActivity::class.java))
         }
-
     }
 
     override fun onResume() {

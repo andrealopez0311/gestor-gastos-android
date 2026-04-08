@@ -27,6 +27,11 @@ class CrearHogarActivity : AppCompatActivity() {
             }
             crearHogar(nombre)
         }
+
+        binding.btnAhoraMas.setOnClickListener {
+            startActivity(Intent(this@CrearHogarActivity, HogarActivity::class.java))
+            finish()
+        }
     }
 
     private fun crearHogar(nombre: String) {

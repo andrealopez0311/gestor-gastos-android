@@ -14,6 +14,7 @@ import com.andrea.gestorgastos.network.RetrofitClient
 import com.andrea.gestorgastos.ui.gastos.GastosActivity
 import kotlinx.coroutines.launch
 import com.andrea.gestorgastos.ui.hogar.HogarActivity
+import com.andrea.gestorgastos.ui.hogar.CrearHogarActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -65,6 +66,24 @@ class LoginActivity : AppCompatActivity() {
                     val token = response.body()!!.access_token
                     prefs.edit().putString("token", token).apply()
                     RetrofitClient.setToken(token)
+
+                    // Comprobar si es el primer login
+                    val primerLogin = prefs.getBoolean("primer_login_$email", true)
+
+                    if (primerLogin) {
+                        // Comprobar si tiene hogar
+                        val hogarResponse = RetrofitClient.api.getMiHogar()
+                        val tieneHogar = hogarResponse.isSuccessful &&
+                                hogarResponse.body()?.get("hogar") != null
+
+                        if (!tieneHogar) {
+                            prefs.edit().putBoolean("primer_login_$email", false).apply()
+                            startActivity(Intent(this@LoginActivity, CrearHogarActivity::class.java))
+                            finish()
+                            return@launch
+                        }
+                    }
+
                     irAGastos()
                 } else {
                     Toast.makeText(this@LoginActivity, "Credenciales incorrectas", Toast.LENGTH_SHORT).show()

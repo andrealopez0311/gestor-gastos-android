@@ -34,6 +34,15 @@
                 android:layout_height="wrap_content"
                 android:text="+ Invitar"
                 android:backgroundTint="#1565C0"
+                android:textColor="@android:color/white"
+                android:layout_marginRight="8dp"/>
+
+            <Button
+                android:id="@+id/btnCerrarSesion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Salir"
+                android:backgroundTint="#1565C0"
                 android:textColor="@android:color/white"/>
 
         </LinearLayout>
@@ -147,6 +156,19 @@
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/btnCrearHogar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🏠 Crear Hogar"
+            android:backgroundTint="#1E88E5"
+            android:textColor="@android:color/white"
+            android:padding="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"/>
 
         <!-- BOTONES FILA 1 -->
         <LinearLayout
